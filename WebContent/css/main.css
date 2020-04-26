@@ -1,0 +1,20 @@
+.aslista {
+  table-layout: auto;
+  width: 600px;
+  font-family: Tahoma;
+}
+
+.aslista th {
+  text-align: left;
+  color: white;
+  background: #008000;
+  padding: 10px 5px 10px 5px;
+}
+
+.aslista td {
+  padding: 10px 5px 10px 5px;
+}
+
+.aslista tr:nth-child(even) {
+  background: #cce5cc;
+}
