@@ -1,20 +1,39 @@
-.aslista {
-  table-layout: auto;
-  width: 600px;
+@charset "ISO-8859-1";
+table {
   font-family: Tahoma;
+  border-collapse: collapse;  
+  width: 50%;
 }
 
-.aslista th {
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;  
+}
+
+table tbody tr:nth-child(even){background-color: #cce5cc;}
+
+table tbody tr:hover {background-color: #ddd;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
   text-align: left;
+  background-color: #008000;
   color: white;
-  background: #008000;
-  padding: 10px 5px 10px 5px;
 }
 
-.aslista td {
-  padding: 10px 5px 10px 5px;
+.poista{
+	color: red;
+	text-decoration: underline;
+	cursor: pointer;	
 }
 
-.aslista tr:nth-child(even) {
-  background: #cce5cc;
+.oikealle{
+	text-align: right;	
+	
+}
+
+#uusiAsiakas, #takaisin{
+	color: white;	
+	cursor: pointer;	
 }
