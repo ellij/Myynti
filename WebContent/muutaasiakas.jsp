@@ -4,20 +4,21 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/main.css">
 <script src="scripts/main.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <title>Insert title here</title>
 </head>
 <body>
 <form id="tiedot">
 	<table>
-		<thead>	
+	<thead>	
+		<tr>
+			<th colspan="5" class="oikealle"><span id="takaisin">Takaisin listaukseen</span></th>
+		</tr>		
 			<tr>
-				<th colspan="5" class="oikealle"><span id="takaisin">Takaisin listaukseen</span></th>
-			</tr>		
-			<tr>
+				
 				<th>Etunimi</th>
 				<th>Sukunimi</th>
 				<th>Puhelin</th>
@@ -28,14 +29,15 @@
 		<tbody>
 			<tr>
 				<td><input type="text" name="etunimi" id="etunimi"></td>
-				<td><input type="text" name="sukunimi" id="sukunimi"></td>
+				<td><input type="text" name="sukunimi" id ="sukunimi"></td>
 				<td><input type="text" name="puhelin" id="puhelin"></td>
-				<td><input type="text" name="sposti" id="sposti"></td> 
-				<td><input type="submit" id="tallenna" value="Lisää"></td>
+				<td><input type="text" name="sposti" id="sposti"></td>
+				<td><input type="submit" id="tallenna" value="Muuta"></td>
 			</tr>
 		</tbody>
 	</table>
-</form>
+	<input type="hidden" name="asiakas_id" id="asiakas_id">
+	</form>
 <span id="ilmo"></span>
 </body>
 <script>
@@ -43,14 +45,23 @@ $(document).ready(function(){
 	$("#takaisin").click(function(){
 		document.location="listaaasiakkaat.jsp";
 	});
+	
+	var asiakas_id = requestURLParam("asiakas_id");
+	$.ajax({url:"asiakkaat/haeyksi/"+asiakas_id, type:"GET", dataType:"json", success:function(result){
+		$("#asiakas_id").val(result.asiakas_id);
+		$("#etunimi").val(result.etunimi);
+		$("#sukunimi").val(result.sukunimi);
+		$("#puhelin").val(result.puhelin);
+		$("#sposti").val(result.sposti);
+	}});
 	$("#tiedot").validate({						
 		rules: {
 			etunimi:  {
-				required: true,
+				required: true,				
 				minlength: 2				
 			},	
 			sukunimi:  {
-				required: true,
+				required: true,				
 				minlength: 2				
 			},
 			puhelin:  {
@@ -59,16 +70,16 @@ $(document).ready(function(){
 			},	
 			sposti:  {
 				required: true,
-				email: true
+				email: true				
 			}	
 		},
 		messages: {
 			etunimi: {     
-				required: "Puuttuu",
+				required: "Puuttuu",				
 				minlength: "Liian lyhyt"			
 			},
 			sukunimi: {
-				required: "Puuttuu",
+				required: "Puuttuu",				
 				minlength: "Liian lyhyt"
 			},
 			puhelin: {
@@ -81,24 +92,24 @@ $(document).ready(function(){
 			}
 		},			
 		submitHandler: function(form) {	
-			lisaaTiedot();
+			paivitaTiedot();
 		}		
-	});
+	});  
 	//Viedään kursori etunimi-kenttään sivun latauksen yhteydessä
-	$("#etunimi").focus();
+	$("#etunimi").focus(); 
 });
-//funktio tietojen lisäämistä varten. Kutsutaan backin POST-metodia ja välitetään kutsun mukana uudet tiedot json-stringinä.
-//POST /asiakkaat/
-function lisaaTiedot(){	
+function paivitaTiedot(){
 	var formJsonStr = formDataJsonStr($("#tiedot").serializeArray()); //muutetaan lomakkeen tiedot json-stringiksi
-	$.ajax({url:"asiakkaat", data:formJsonStr, type:"POST", dataType:"json", success:function(result) { //result on joko {"response:1"} tai {"response:0"}       
+	console.log(formJsonStr);
+	$.ajax({url:"asiakkaat", data:formJsonStr, type:"PUT", dataType:"json", success:function(result) { //result on joko {"response:1"} tai {"response:0"}       
 		if(result.response==0){
-      	$("#ilmo").html("Asiakkaan lisääminen epäonnistui.");
-      }else if(result.response==1){			
-      	$("#ilmo").html("Asiakkaan lisääminen onnistui.");
-      	$("#etunimi", "#sukunimi", "#puhelin", "#sposti").val("");
+        	$("#ilmo").html("Asiakkaan päivittäminen epäonnistui.");
+        }else if(result.response==1){			
+        	$("#ilmo").html("Asiakkaan päivittäminen onnistui.");
+        	$("#etunimi, #sukunimi, #puhelin, #sposti").val("");
 		}
-  }});	
+    }});	
 }
+
 </script>
 </html>
